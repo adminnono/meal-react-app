@@ -3,21 +3,29 @@ import axios from "axios";
 import Card from "./components/Card";
 
 const App = () => {
+  const [inputSearch, setInputSearch] = useState("");
   const [mealsData, setMealsData] = useState([]);
 
   useEffect(() => {
     axios
-      .get("https://www.themealdb.com/api/json/v1/1/search.php?s=chicken")
+      .get(
+        "https://www.themealdb.com/api/json/v1/1/search.php?s=" + inputSearch
+      )
       .then((res) => setMealsData(res.data.meals));
-  }, []);
+  }, [inputSearch]);
   return (
     <div className="app-container">
       <h1>React Cooking App</h1>
-      <input type="text" placeholder="Taper le nom d'un aliment (en anglais)" />
+      <input
+        type="text"
+        placeholder="Taper le nom d'un aliment (en anglais)"
+        onChange={(e) => setInputSearch(e.target.value)}
+      />
       <div className="meals-container">
-        {mealsData.map((meal) => (
-          <Card key={meal.idMeal} meal={meal} />
-        ))}
+        {mealsData &&
+          mealsData
+            .slice(0, 24)
+            .map((meal) => <Card key={meal.idMeal} meal={meal} />)}
       </div>
     </div>
   );
